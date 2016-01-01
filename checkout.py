@@ -129,7 +129,8 @@ class Party:
 class CreditCardForm(Form):
     owner = TextField(_('Full Name on Card'), [validators.DataRequired(), ])
     number = TextField(
-        _('Card Number'), [validators.DataRequired(), validators.Length(max=20)]
+        _('Card Number'), [validators.DataRequired(),
+            validators.Length(max=20)]
     )
     expiry_month = SelectField(
         _('Card Expiry Month'),
