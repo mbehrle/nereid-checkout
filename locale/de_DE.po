@@ -106,6 +106,18 @@ msgctxt "model:res.group,name:"
 msgid "Order Confirmation BCC receivers"
 msgstr "Bestellbestätigung BCC-Empfänger"
 
+msgctxt "nereid:checkout.py:130"
+msgid "Full Name on Card"
+msgstr "Name (wie auf der Karte)"
+
+msgctxt "nereid:checkout.py:132"
+msgid "Card Number"
+msgstr "Kartennummer"
+
+msgctxt "nereid:checkout.py:135"
+msgid "Card Expiry Month"
+msgstr "Gültigkeitsmonat"
+
 msgctxt "nereid:checkout.py:138"
 msgid "01-January"
 msgstr "01-Januar"
@@ -153,6 +165,14 @@ msgstr "11-November"
 msgctxt "nereid:checkout.py:149"
 msgid "12-December"
 msgstr "12-Dezember"
+
+msgctxt "nereid:checkout.py:156"
+msgid "Card Expiry Year"
+msgstr "Gültigkeitsjahr"
+
+msgctxt "nereid:checkout.py:161"
+msgid "CVD/CVV Number"
+msgstr "CVD/CVV Nummer"
 
 msgctxt "nereid:checkout.py:178"
 msgid "Use shipping address as billing address"
