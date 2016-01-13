@@ -255,7 +255,7 @@ class Sale:
             self.save()
             if request.is_xhr:
                 return jsonify({
-                    'message': _('Comment Added'),
+                    'message': unicode(_('Comment Added')),
                     'comment': self.comment,
                 })
 
