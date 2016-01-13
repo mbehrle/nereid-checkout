@@ -234,6 +234,10 @@ msgctxt "nereid:sale.py:148"
 msgid "The payment profile chosen is invalid"
 msgstr "Das ausgewählte Zahlungsprofil ist ungültig."
 
+msgctxt "nereid:sale.py:258"
+msgid "Comment Added"
+msgstr "Kommentar hinzugefügt"
+
 msgctxt "nereid:sale.py:262"
 msgid "Comment Added"
 msgstr "Kommentar hinzugefügt"
