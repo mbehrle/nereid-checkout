@@ -8,7 +8,7 @@ from trytond.model import fields
 from trytond.pool import PoolMeta, Pool
 
 from nereid import render_template, request, abort, login_required, \
-    route, current_user, flash, redirect, url_for, jsonify
+    route, current_user, flash, redirect, url_for, jsonify, current_website
 from nereid.contrib.pagination import Pagination
 from nereid.ctx import has_request_context
 from trytond.transaction import Transaction
@@ -52,7 +52,7 @@ class Sale:
         filter_by = request.args.get('filter_by', None)
 
         domain = [
-            ('party', '=', request.nereid_user.party.id),
+            ('party', '=', current_user.party.id),
         ]
         req_date = (
             date.today() + relativedelta(months=-3)
@@ -65,8 +65,12 @@ class Sale:
             domain.append(('state', '=', 'cancel'))
 
         elif filter_by == 'archived':
+            # only done and cancelled orders should be in archive
+            # irrespective of the date. Pre orders for example
+            # could be over 3 months old and still be in the
+            # processing state
             domain.append(
-                ('state', 'not in', ('draft', 'quotation'))
+                ('state', 'in', ('done', 'cancel'))
             )
 
             # Add a sale_date domain for recent orders.
@@ -75,12 +79,14 @@ class Sale:
             ))
 
         else:
-            domain.append(('state', 'not in', ('draft', 'quotation', 'cancel')))
-
-            # Add a sale_date domain for recent orders.
-            domain.append((
-                'sale_date', '>=', req_date
-            ))
+            domain.append([
+                'OR',
+                ('state', 'in', ('confirmed', 'processing')),
+                [
+                    ('state', 'in', ('done', 'cancel')),
+                    ('sale_date', '>=', req_date),
+                ]
+            ])
 
         # Handle order duration
         sales = Pagination(cls, domain, page, cls.per_page)
@@ -107,7 +113,7 @@ class Sale:
         # Try to find if the user can be shown the order
         access_code = request.values.get('access_code', None)
 
-        if current_user.is_anonymous():
+        if current_user.is_anonymous:
             if not access_code:
                 # No access code provided, user is not authorized to
                 # access order page
@@ -116,7 +122,7 @@ class Sale:
                 # Invalid access code
                 abort(403)
         else:
-            if self.party.id != request.nereid_user.party.id:
+            if self.party.id != current_user.party.id:
                 # Order does not belong to the user
                 abort(403)
 
@@ -133,7 +139,7 @@ class Sale:
             for sale in sales:
 
                 # Change party name to invoice address name for guest user
-                if current_user.is_anonymous():
+                if current_user.is_anonymous:
                     sale.party.name = sale.invoice_address.name
                     sale.party.save()
 
@@ -141,7 +147,7 @@ class Sale:
         """
         Checks if payment profile belongs to right party
         """
-        if not current_user.is_anonymous() and \
+        if not current_user.is_anonymous and \
                 payment_profile.party != current_user.party:
             # verify that the payment profile belongs to the registered
             # user.
@@ -171,10 +177,10 @@ class Sale:
             AddSalePaymentWizard.create()[0]
         )
 
-        if request.nereid_website.credit_card_gateway and (
+        if current_website.credit_card_gateway and (
             payment_profile or credit_card_form
         ):
-            gateway = request.nereid_website.credit_card_gateway
+            gateway = current_website.credit_card_gateway
 
             if payment_profile:
                 self.validate_payment_profile(payment_profile)
@@ -236,13 +242,13 @@ class Sale:
         if self.state not in self.comment_allowed_states:
             abort(403)
 
-        if current_user.is_anonymous():
+        if current_user.is_anonymous:
             access_code = request.values.get('access_code', None)
             if access_code and access_code == self.guest_access_code:
                 # No access code provided
                 comment_is_allowed = True
 
-        elif current_user.is_authenticated() and \
+        elif current_user.is_authenticated and \
                 current_user.party == self.party:
             comment_is_allowed = True
 
@@ -277,7 +283,7 @@ class Sale:
         """
         context = super(Sale, self)._get_email_template_context()
 
-        if has_request_context() and not current_user.is_anonymous():
+        if has_request_context() and not current_user.is_anonymous:
             customer_name = current_user.display_name
         else:
             customer_name = self.party.name
@@ -299,7 +305,7 @@ class Sale:
         to_emails = set()
         if self.party.email:
             to_emails.add(self.party.email.lower())
-        if has_request_context() and not current_user.is_anonymous() and \
+        if has_request_context() and not current_user.is_anonymous and \
                 current_user.email:
             to_emails.add(current_user.email.lower())
 
