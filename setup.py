@@ -87,9 +87,9 @@ requires = []
 MODULE = 'nereid_checkout'
 PREFIX = 'trytond'
 MODULE2PREFIX = {
-    'nereid_payment_gateway': 'fio',
-    'sale_payment_gateway': 'fio',
-    'email_queue': 'fio',
+    'nereid_payment_gateway': 'm9s',
+    'sale_payment_gateway': 'm9s',
+    'email_queue': 'm9s',
 }
 
 for dep in info.get('depends', []):
@@ -148,7 +148,7 @@ setup(
     test_suite='tests',
     test_loader='trytond.test_loader:Loader',
     tests_require=[
-        'fio_payment_gateway_authorize_net >= %s.%s, < %s.%s' % (
+        'm9s_payment_gateway_authorize_net >= %s.%s, < %s.%s' % (
             major_version, minor_version, major_version, minor_version + 1
         ),
         'pycountry',
