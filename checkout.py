@@ -779,7 +779,7 @@ class Checkout(ModelView):
         # Redirect to the order confirmation page
         flash(_(
             "Your order #%(sale)s has been processed",
-            sale=sale.reference
+            sale=sale.number
         ))
 
         return redirect(url_for(
