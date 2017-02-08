@@ -74,7 +74,7 @@ msgctxt "field:nereid.website.payment_method,write_uid:"
 msgid "Write User"
 msgstr "Letzte Änderung durch"
 
-msgctxt "field:party.address,phone_number:"
+msgctxt "field:party.address,phone:"
 msgid "Phone"
 msgstr "Telefon"
 
@@ -214,39 +214,35 @@ msgctxt "nereid:checkout.py:289"
 msgid "Guest with email: %(email)s"
 msgstr "Gast mit E-Mail: %(email)s"
 
-msgctxt "nereid:checkout.py:423"
+msgctxt "nereid:checkout.py:340"
+msgid "Either username or password is incorrect"
+msgstr "Entweder der Anmeldename oder das Passwort ist falsch"
+
+msgctxt "nereid:checkout.py:424"
 msgid "The address chosen is not valid"
-msgstr "Die gewählte Adresse ist ungültig"
+msgstr "Die ausgewählte Adresse ist nicht gültig"
 
-msgctxt "nereid:checkout.py:575"
+msgctxt "nereid:checkout.py:571"
 msgid "The address chosen is not valid"
-msgstr "Die gewählte Adresse ist ungültig"
+msgstr "Die ausgewählte Adresse ist nicht gültig"
 
-msgctxt "nereid:checkout.py:766"
-msgid "Error is processing payment."
-msgstr "Fehler bei der Durchführung der Zahlung."
+msgctxt "nereid:checkout.py:757"
+msgid "Error in processing payment."
+msgstr "Fehler bei Durchführung der Zahlung"
 
-msgctxt "nereid:checkout.py:790"
+msgctxt "nereid:checkout.py:781"
 msgid "Your order #%(sale)s has been processed"
 msgstr "Ihre Bestellung Nr. %(sale)s wurde ausgeführt"
 
-msgctxt "nereid:sale.py:148"
+msgctxt "nereid:sale.py:154"
 msgid "The payment profile chosen is invalid"
 msgstr "Das ausgewählte Zahlungsprofil ist ungültig."
 
-msgctxt "nereid:sale.py:257"
+msgctxt "nereid:sale.py:264"
 msgid "Comment Added"
 msgstr "Kommentar hinzugefügt"
 
-msgctxt "nereid:sale.py:258"
-msgid "Comment Added"
-msgstr "Kommentar hinzugefügt"
-
-msgctxt "nereid:sale.py:261"
-msgid "Comment Added"
-msgstr "Kommentar hinzugefügt"
-
-msgctxt "nereid:sale.py:262"
+msgctxt "nereid:sale.py:268"
 msgid "Comment Added"
 msgstr "Kommentar hinzugefügt"
 
