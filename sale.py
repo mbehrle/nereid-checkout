@@ -55,7 +55,7 @@ class Sale:
             ('party', '=', current_user.party.id),
         ]
         req_date = (
-            date.today() + relativedelta(months=-3)
+            date.today() + relativedelta(months=-12)
         )
 
         if filter_by == 'done':
@@ -67,7 +67,7 @@ class Sale:
         elif filter_by == 'archived':
             # only done and cancelled orders should be in archive
             # irrespective of the date. Pre orders for example
-            # could be over 3 months old and still be in the
+            # could be over 12 months old and still be in the
             # processing state
             domain.append(
                 ('state', 'in', ('done', 'cancel'))
