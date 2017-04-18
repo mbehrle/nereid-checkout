@@ -130,19 +130,6 @@ class Sale:
             'sale.jinja', sale=self, confirmation=confirmation
         )
 
-    @classmethod
-    def confirm(cls, sales):
-        "Send an email after sale is confirmed"
-        super(Sale, cls).confirm(sales)
-
-        if has_request_context():
-            for sale in sales:
-
-                # Change party name to invoice address name for guest user
-                if current_user.is_anonymous:
-                    sale.party.name = sale.invoice_address.name
-                    sale.party.save()
-
     def validate_payment_profile(self, payment_profile):
         """
         Checks if payment profile belongs to right party
