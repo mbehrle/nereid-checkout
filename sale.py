@@ -273,7 +273,7 @@ class Sale:
         if has_request_context() and not current_user.is_anonymous:
             customer_name = current_user.display_name
         else:
-            customer_name = self.party.name
+            customer_name = self.party.full_name
 
         context.update({
             'url_for': lambda *args, **kargs: url_for(*args, **kargs),
