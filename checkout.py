@@ -611,7 +611,7 @@ class Checkout(ModelView):
                 cart.sale.save()
 
                 return redirect(
-                    url_for('nereid.checkout.payment_method')
+                    url_for('nereid.checkout.delivery_method')
                 )
 
         addresses = []
