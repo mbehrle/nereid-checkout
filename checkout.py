@@ -458,6 +458,9 @@ class Checkout(ModelView):
                 # Finally save the address to the shipment
                 cart.sale.shipment_address = address
                 cart.sale.save()
+                # Reprocess sale lines to get correct taxes according to
+                # destination country
+                cart.sale.reprocess_sale_lines()
 
                 return redirect(
                     url_for('nereid.checkout.validate_address')
@@ -547,6 +550,8 @@ class Checkout(ModelView):
                         url_for('nereid.checkout.shipping_address')
                     )
                 cart.sale.invoice_address = cart.sale.shipment_address
+                cart.sale.invoice_address.invoice = True
+                cart.sale.invoice_address.save()
                 cart.sale.save()
                 return redirect(
                     url_for('nereid.checkout.payment_method')
@@ -558,6 +563,8 @@ class Checkout(ModelView):
                 if payment_profile and \
                         cart.sale.invoice_address != payment_profile.address:
                     cart.sale.invoice_address = payment_profile.address
+                    cart.sale.invoice_address.invoice = True
+                    cart.sale.invoice_address.save()
                     cart.sale.save()
                     return redirect(
                         url_for('nereid.checkout.payment_method')
@@ -566,7 +573,6 @@ class Checkout(ModelView):
             if not current_user.is_anonymous and request.form.get('address'):
                 # Registered user has chosen an existing address
                 address = Address(request.form.get('address', type=int))
-
                 if address.party != cart.sale.party:
                     flash(_('The address chosen is not valid'))
                     return redirect(
@@ -607,6 +613,8 @@ class Checkout(ModelView):
 
             if address is not None:
                 # Finally save the address to the shipment
+                address.invoice = True
+                address.save()
                 cart.sale.invoice_address = address
                 cart.sale.save()
 

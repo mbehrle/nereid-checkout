@@ -345,6 +345,20 @@ class Sale:
             }
         return data
 
+    def reprocess_sale_lines(self):
+        '''
+        - Set the address type for the used addresses
+        - Reprocess the lines of a sale to get updated taxes.
+        '''
+        self.invoice_address.invoice = True
+        self.invoice_address.save()
+        self.shipment_address.delivery = True
+        self.shipment_address.save()
+
+        for line in self.lines:
+            line.on_change_product()
+            line.save()
+
 
 class SaleLine:
     __name__ = 'sale.line'
