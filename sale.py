@@ -347,8 +347,10 @@ class Sale:
 
     def reprocess_sale_lines(self):
         '''
-        - Set the address type for the used addresses
+        - Set the address type for the used addresses.
         - Reprocess the lines of a sale to get updated taxes.
+        - Remove shipment cost lines. They could be inappropriate with a
+          newly selected address and will be recalculated later (#2924).
         '''
         self.invoice_address.invoice = True
         self.invoice_address.save()
@@ -356,8 +358,13 @@ class Sale:
         self.shipment_address.save()
 
         for line in self.lines:
+            if (getattr(line, 'shipment_cost') and
+                line.shipment_cost is not None):
+                line.delete([line])
+                continue
             line.on_change_product()
             line.save()
+
 
 
 class SaleLine:
