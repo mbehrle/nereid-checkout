@@ -32,7 +32,7 @@ class NereidPaymentMethod(ModelSQL, ModelView):
     method = fields.Function(
         fields.Char('Payment Gateway Method'), 'get_method'
     )
-    instructions = fields.Text('Instructions')
+    instructions = fields.Text('Instructions', translate=True)
     sequence = fields.Integer('Sequence', required=True, select=True)
     website = fields.Many2One('nereid.website', 'Website', required=True)
 
