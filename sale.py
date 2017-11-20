@@ -351,6 +351,8 @@ class Sale:
         - Reprocess the lines of a sale to get updated taxes.
         - Remove shipment cost lines. They could be inappropriate with a
           newly selected address and will be recalculated later (#2924).
+        - Keep gift_card prices, they can be manually set and shouldn't be
+          updated by on_change_product (#3017).
         '''
         self.invoice_address.invoice = True
         self.invoice_address.save()
@@ -362,9 +364,15 @@ class Sale:
                 line.shipment_cost is not None):
                 line.delete([line])
                 continue
+            gross_unit_price = line.gross_unit_price
+            unit_price = line.unit_price
             line.on_change_product()
+            # Keep gift_card prices, they can be manually set
+            if line.product and getattr(line.product, 'is_gift_card', None):
+                if line.product.is_gift_card:
+                    line.gross_unit_price = gross_unit_price
+                    line.unit_price = unit_price
             line.save()
-
 
 
 class SaleLine:
