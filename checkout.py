@@ -640,15 +640,22 @@ class Checkout(ModelView):
         return CreditCardForm()
 
     @classmethod
-    def get_payment_form(cls):
+    def get_form_payment(cls):
         '''
         Return a payment form
+        '''
+        return PaymentForm()
+
+    @classmethod
+    def get_payment_form(cls):
+        '''
+        Populate the payment form
         '''
         NereidCart = Pool().get('nereid.cart')
 
         cart = NereidCart.open_cart()
 
-        payment_form = PaymentForm()
+        payment_form = cls.get_form_payment()
 
         # add possible alternate payment_methods
         payment_form.alternate_payment_method.choices = [
