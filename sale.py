@@ -155,10 +155,9 @@ class Sale:
 
         All payment profiles are saved as of now.
         """
-
-        AddSalePaymentWizard = Pool().get(
-            'sale.payment.add', type="wizard"
-        )
+        pool = Pool()
+        AddSalePaymentWizard = pool.get('sale.payment.add', type="wizard")
+        GiftCard = pool.get('gift_card.gift_card')
 
         payment_wizard = AddSalePaymentWizard(
             AddSalePaymentWizard.create()[0]
@@ -209,6 +208,14 @@ class Sale:
         payment_wizard.payment_info.method = gateway.method
         payment_wizard.payment_info.provider = gateway.provider
         payment_wizard.payment_info.gateway = gateway
+
+        if Transaction().context.get('gift_card'):
+            gift_card = GiftCard(Transaction().context['gift_card'])
+            amount_to_pay = min(gift_card.amount_available,
+                    self._get_amount_to_checkout())
+            print(amount_to_pay)
+            payment_wizard.payment_info.amount = amount_to_pay
+            payment_wizard.payment_info.gift_card = gift_card
 
         with Transaction().set_context(active_id=self.id):
             try:
