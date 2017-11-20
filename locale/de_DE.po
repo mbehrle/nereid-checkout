@@ -222,27 +222,27 @@ msgctxt "nereid:checkout.py:424"
 msgid "The address chosen is not valid"
 msgstr "Die ausgewählte Adresse ist nicht gültig"
 
-msgctxt "nereid:checkout.py:571"
+msgctxt "nereid:checkout.py:577"
 msgid "The address chosen is not valid"
-msgstr "Die ausgewählte Adresse ist nicht gültig"
+msgstr "Die ausgewählte Adresse ist ungültig."
 
-msgctxt "nereid:checkout.py:757"
+msgctxt "nereid:checkout.py:772"
 msgid "Error in processing payment."
-msgstr "Fehler bei Durchführung der Zahlung"
+msgstr "Fehler bei der Durchführung der Zahlung."
 
-msgctxt "nereid:checkout.py:781"
+msgctxt "nereid:checkout.py:796"
 msgid "Your order #%(sale)s has been processed"
-msgstr "Ihre Bestellung Nr. %(sale)s wurde ausgeführt"
+msgstr "Ihre Bestellung Nr. %(sale)s wurde ausgeführt."
 
-msgctxt "nereid:sale.py:154"
+msgctxt "nereid:sale.py:141"
 msgid "The payment profile chosen is invalid"
 msgstr "Das ausgewählte Zahlungsprofil ist ungültig."
 
-msgctxt "nereid:sale.py:264"
+msgctxt "nereid:sale.py:258"
 msgid "Comment Added"
 msgstr "Kommentar hinzugefügt"
 
-msgctxt "nereid:sale.py:268"
+msgctxt "nereid:sale.py:262"
 msgid "Comment Added"
 msgstr "Kommentar hinzugefügt"
 
