@@ -361,8 +361,9 @@ class Sale:
         - Keep gift_card prices, they can be manually set and shouldn't be
           updated by on_change_product (#3017).
         '''
-        self.invoice_address.invoice = True
-        self.invoice_address.save()
+        if self.invoice_address:
+            self.invoice_address.invoice = True
+            self.invoice_address.save()
         self.shipment_address.delivery = True
         self.shipment_address.save()
 
