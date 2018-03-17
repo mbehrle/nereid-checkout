@@ -7,7 +7,7 @@ from nereid import render_template, request, url_for, flash, redirect, \
     current_app, current_user, route, login_required, current_website
 from nereid.signals import failed_login
 from nereid.globals import session
-from flask.ext.login import login_user
+from flask_login import login_user
 from flask_wtf import Form
 from wtforms import TextField, RadioField, validators, PasswordField, \
     ValidationError, SelectField, BooleanField
