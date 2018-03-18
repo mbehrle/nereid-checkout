@@ -18,8 +18,9 @@ from trytond.model import ModelView, fields
 from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
 from trytond import backend
+from nereid.contrib.locale import make_lazy_gettext
 
-from .i18n import _
+_ = make_lazy_gettext('nereid_checkout')
 
 __all__ = ['Cart', 'Party', 'Checkout', 'Party', 'Address']
 __metaclass__ = PoolMeta

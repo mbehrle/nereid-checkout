@@ -13,8 +13,9 @@ from nereid.contrib.pagination import Pagination
 from nereid.ctx import has_request_context
 from trytond.transaction import Transaction
 from trytond.exceptions import UserError
+from nereid.contrib.locale import make_lazy_gettext
 
-from .i18n import _
+_ = make_lazy_gettext('nereid_checkout')
 
 __all__ = ['Sale', 'SaleLine']
 __metaclass__ = PoolMeta
