@@ -214,7 +214,6 @@ class Sale:
             gift_card = GiftCard(Transaction().context['gift_card'])
             amount_to_pay = min(gift_card.amount_available,
                     self._get_amount_to_checkout())
-            print(amount_to_pay)
             payment_wizard.payment_info.amount = amount_to_pay
             payment_wizard.payment_info.gift_card = gift_card
 
