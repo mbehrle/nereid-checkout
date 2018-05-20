@@ -50,7 +50,9 @@ class Cart:
         SalePayment = Pool().get('sale.payment')
 
         if self.sale and self.sale.payments:
-            SalePayment.delete(self.sale.payments)
+            to_delete = [p for p in self.sale.payments
+                if not p.payment_transactions]
+            SalePayment.delete(to_delete)
 
         super(Cart, self)._clear_cart()
 
