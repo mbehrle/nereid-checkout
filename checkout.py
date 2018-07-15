@@ -20,6 +20,8 @@ from trytond.transaction import Transaction
 from trytond import backend
 from nereid.contrib.locale import make_lazy_gettext
 
+from .signals import cart_address_updated
+
 _ = make_lazy_gettext('nereid_checkout')
 
 __all__ = ['Cart', 'Party', 'Checkout', 'Party', 'Address']
@@ -464,6 +466,7 @@ class Checkout(ModelView):
                 # Reprocess sale lines to get correct taxes according to
                 # destination country
                 cart.sale.reprocess_sale_lines()
+                cart_address_updated.send(cart)
 
                 return redirect(
                     url_for('nereid.checkout.validate_address')
