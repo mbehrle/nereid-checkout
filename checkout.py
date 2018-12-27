@@ -802,7 +802,7 @@ class Checkout(ModelView):
 
         # Redirect to the order confirmation page
         flash(_(
-            "Your order #%(sale)s has been processed",
+            "Your order has been processed",
             sale=sale.number
         ))
 

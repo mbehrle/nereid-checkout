@@ -359,12 +359,12 @@ msgid "Error in processing payment."
 msgstr "Fehler bei der Durchführung der Zahlung."
 
 msgctxt "nereid:checkout.py:797"
-msgid "Your order #%(sale)s has been processed"
-msgstr "Ihre Bestellung Nr. %(sale)s wurde ausgeführt."
+msgid "Your order has been processed"
+msgstr "Ihre Bestellung wurde ausgeführt."
 
 msgctxt "nereid:checkout.py:799"
-msgid "Your order #%(sale)s has been processed"
-msgstr "Ihre Bestellung Nr. %(sale)s wurde ausgeführt."
+msgid "Your order has been processed"
+msgstr "Ihre Bestellung wurde ausgeführt."
 
 msgctxt "nereid:sale.py:142"
 msgid "The payment profile chosen is invalid"
