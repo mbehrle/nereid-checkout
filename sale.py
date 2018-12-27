@@ -382,6 +382,17 @@ class Sale:
                     line.unit_price = unit_price
             line.save()
 
+    @classmethod
+    def quote_web_sales(cls, sales):
+        '''
+        Quote the sale, process the payments
+        '''
+        cls.set_number(sales)
+        cls.quote(sales)
+        for sale in sales:
+            sale.handle_payment_on_confirm()
+            sale.process_pending_payments()
+
 
 class SaleLine:
     __name__ = 'sale.line'

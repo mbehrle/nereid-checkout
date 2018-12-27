@@ -787,13 +787,15 @@ class Checkout(ModelView):
     @classmethod
     def confirm_cart(cls, cart):
         '''
-        Confirm the sale, clear the sale from the cart
+        Quote the sale, clear the sale from the cart
         '''
         Sale = Pool().get('sale.sale')
 
         sale = cart.sale
-        Sale.quote([cart.sale])
-        Sale.confirm([cart.sale])
+        with Transaction().set_context(
+                queue_name='sale_checkout',
+                ):
+            Sale.__queue__.quote_web_sales([sale])
 
         cart.sale = None
         cart.save()
