@@ -785,11 +785,21 @@ class Checkout(ModelView):
         )
 
     @classmethod
+    def preprocess_confirm_cart(cls, cart):
+        '''
+        Run here any procedures needed before entering the queue
+        (e.g. methods that could need the request context)
+        '''
+        pass
+
+    @classmethod
     def confirm_cart(cls, cart):
         '''
         Quote the sale, clear the sale from the cart
         '''
         Sale = Pool().get('sale.sale')
+
+        cls.preprocess_confirm_cart(cart)
 
         sale = cart.sale
         with Transaction().set_context(
