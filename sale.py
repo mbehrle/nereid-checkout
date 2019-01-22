@@ -82,7 +82,7 @@ class Sale:
         else:
             domain.append([
                 'OR',
-                ('state', 'in', ('confirmed', 'processing')),
+                ('state', 'in', ('quotation', 'confirmed', 'processing')),
                 [
                     ('state', 'in', ('done', 'cancel')),
                     ('sale_date', '>=', req_date),
