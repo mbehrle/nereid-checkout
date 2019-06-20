@@ -2,6 +2,7 @@
 import warnings
 from datetime import datetime
 from functools import wraps
+from decimal import Decimal
 
 from nereid import render_template, request, url_for, flash, redirect, \
     current_app, current_user, route, login_required, current_website
@@ -687,11 +688,14 @@ class Checkout(ModelView):
         This is separated so that other modules can easily modify the
         behavior of processing payment independent of this module.
         """
-        NereidCart = Pool().get('nereid.cart')
-        PaymentProfile = Pool().get('party.payment_profile')
-        PaymentMethod = Pool().get('nereid.website.payment_method')
+        pool = Pool()
+        NereidCart = pool.get('nereid.cart')
+        PaymentMethod = pool.get('nereid.website.payment_method')
+        PaymentProfile = pool.get('party.payment_profile')
+        PaymentTransaction = pool.get('payment_gateway.transaction')
 
         cart = NereidCart.open_cart()
+        sale = cart.sale
         payment_form = cls.get_payment_form()
         credit_card_form = cls.get_credit_card_form()
 
@@ -726,10 +730,92 @@ class Checkout(ModelView):
         elif current_website.credit_card_gateway and \
                 credit_card_form.validate():
             # validate the credit card form and checkout using that
-            cart.sale._add_sale_payment(
-                credit_card_form=credit_card_form
+            # Only one payment per gateway
+            gateway = current_website.credit_card_gateway
+            payment = sale._get_payment_for_gateway(gateway)
+            if payment is None:
+                sale._add_sale_payment(credit_card_form=credit_card_form)
+                payment = sale._get_payment_for_gateway(gateway)
+            # Update the paymount_amount with the actual needed sum, when
+            # it was set to 0 by a cancelation.
+            if payment.amount == Decimal('0'):
+                payment.amount = sale._get_amount_to_checkout()
+                payment.save()
+
+            payment_transaction = PaymentTransaction(
+                party=sale.party,
+                address=sale.invoice_address,
+                amount=payment.amount,
+                currency=sale.currency,
+                gateway=gateway,
+                sale=sale,
+                sale_payment=payment,
+                description='Stripe Cart Payment',
+                origin=sale,
+                )
+            payment_transaction.on_change_party()
+            payment_transaction.save()
+            payment_transaction.create_payment_intent_stripe()
+            client_secret = payment_transaction.provider_token
+            return render_template(
+                'checkout/checkout_stripe.jinja',
+                sale=sale,
+                credit_card_form=credit_card_form,
+                payment_gateway=gateway,
+                client_secret=client_secret,
+                PaymentMethod=PaymentMethod,
             )
-            return cls.confirm_cart(cart)
+
+
+    @classmethod
+    @route('/checkout/checkout_stripe', methods=['GET'])
+    @not_empty_cart
+    @sale_has_non_guest_party
+    @with_company_context
+    def stripe_checkout(cls):
+        payment_gateway = current_website.credit_card_gateway
+        return render_template(
+            'checkout/checkout_stripe.jinja',
+            sale=cart.sale,
+            payment_gateway=payment_gateway,
+        )
+
+    @classmethod
+    @route('/checkout/stripecancel/<sale_id>', methods=['GET'], readonly=False)
+    @with_company_context
+    def cancel_stripe_payment(cls, sale_id=None):
+        '''
+        Set the transaction to failed and return to payment options
+        '''
+        pool = Pool()
+        Sale = pool.get('sale.sale')
+        PaymentGateway = pool.get('payment_gateway.gateway')
+        GatewayTransaction = pool.get('payment_gateway.transaction')
+        SalePayment = pool.get('sale.payment')
+
+        if sale_id:
+            sale = Sale(sale_id)
+            payment = None
+            stripe, = PaymentGateway.search([
+                    ('provider', '=', 'stripe'),
+                    ])
+            for s_payment in sale.payments:
+                if s_payment.gateway.id == stripe.id:
+                    payment = s_payment
+                    break
+            if payment:
+                payment.amount = Decimal('0.0')
+                payment.save()
+                transactions = GatewayTransaction.search([
+                    ('sale_payment', '=', payment.id),
+                    ])
+                for transaction in transactions:
+                    transaction.state = 'cancel'
+                    transaction.save()
+            flash(_('Credit Card payment canceled'), 'info')
+        else:
+            flash(_('Error in payment processing'), 'warning')
+        return redirect(url_for('nereid.checkout.payment_method'))
 
     @classmethod
     @route('/checkout/payment', methods=['GET', 'POST'])
@@ -744,31 +830,73 @@ class Checkout(ModelView):
         are allowed to fill in credit card information or chose from one of
         the existing payment gateways.
         '''
-        NereidCart = Pool().get('nereid.cart')
-        PaymentMethod = Pool().get('nereid.website.payment_method')
-        Date = Pool().get('ir.date')
+        pool = Pool()
+        NereidCart = pool.get('nereid.cart')
+        PaymentMethod = pool.get('nereid.website.payment_method')
+        Date = pool.get('ir.date')
+        PaymentTransaction = pool.get('payment_gateway.transaction')
 
         cart = NereidCart.open_cart()
-        if not cart.sale.shipment_address:
+        sale = cart.sale
+        if not sale.shipment_address:
             return redirect(url_for('nereid.checkout.shipping_address'))
 
         payment_form = cls.get_payment_form()
         credit_card_form = cls.get_credit_card_form()
 
         if request.method == 'POST' and payment_form.validate():
-
             # Setting sale date as current date
-            cart.sale.sale_date = Date.today()
-            cart.sale.save()
+            sale.sale_date = Date.today()
+            sale.save()
 
             # call the billing address method which will handle any
             # address submission that may be there in this request
             cls.billing_address()
 
-            if not cart.sale.invoice_address:
+            if not sale.invoice_address:
                 # If still there is no billing address. Do not proceed
                 # with this
                 return redirect(url_for('nereid.checkout.billing_address'))
+
+            if (current_website.credit_card_gateway
+                    and credit_card_form.validate()
+                    and not payment_form.alternate_payment_method.data):
+                # validate the credit card form and checkout using that
+                # Only one payment per gateway
+                gateway = current_website.credit_card_gateway
+                payment = sale._get_payment_for_gateway(gateway)
+                if payment is None:
+                    sale._add_sale_payment(credit_card_form=credit_card_form)
+                    payment = sale._get_payment_for_gateway(gateway)
+                # Update the paymount_amount with the actual needed sum, when
+                # it was set to 0 by a cancelation.
+                if payment.amount == Decimal('0'):
+                    payment.amount = sale._get_amount_to_checkout()
+                    payment.save()
+
+                payment_transaction = PaymentTransaction(
+                    party=sale.party,
+                    address=sale.invoice_address,
+                    amount=payment.amount,
+                    currency=sale.currency,
+                    gateway=gateway,
+                    sale=sale,
+                    sale_payment=payment,
+                    description='Stripe Cart Payment',
+                    origin=sale,
+                    )
+                payment_transaction.on_change_party()
+                payment_transaction.save()
+                payment_transaction.create_payment_intent_stripe()
+                client_secret = payment_transaction.provider_token
+                return render_template(
+                    'checkout/checkout_stripe.jinja',
+                    sale=sale,
+                    credit_card_form=credit_card_form,
+                    payment_gateway=gateway,
+                    client_secret=client_secret,
+                    PaymentMethod=PaymentMethod,
+                )
 
             rv = cls._process_payment(cart)
             if isinstance(rv, BaseResponse):
@@ -793,7 +921,7 @@ class Checkout(ModelView):
         pass
 
     @classmethod
-    def confirm_cart(cls, cart):
+    def confirm_cart(cls, cart, do_redirect=True):
         '''
         Quote the sale, clear the sale from the cart
         '''
@@ -802,6 +930,8 @@ class Checkout(ModelView):
         cls.preprocess_confirm_cart(cart)
 
         sale = cart.sale
+        if not sale:
+            return
         with Transaction().set_context(
                 queue_name='sale_checkout',
                 ):
@@ -815,11 +945,10 @@ class Checkout(ModelView):
             "Your order has been processed",
             sale=sale.number
         ))
-
-        return redirect(url_for(
-            'sale.sale.render', active_id=sale.id, confirmation=True,
-            access_code=sale.guest_access_code,
-        ))
+        if do_redirect:
+            return redirect(url_for(
+                'sale.sale.render', active_id=sale.id, confirmation=True,
+                access_code=sale.guest_access_code))
 
 
 class Address:

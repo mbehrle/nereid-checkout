@@ -96,7 +96,8 @@ class Sale:
 
     @route('/order/<int:active_id>')
     @route('/order/<int:active_id>/<confirmation>')
-    def render(self, confirmation=None):
+    @route('/order/<int:active_id>/<confirmation>/<clear_cart>', readonly=False)
+    def render(self, confirmation=None, clear_cart=False):
         """Render given sale order
 
         :param sale: ID of the sale Order
@@ -105,11 +106,21 @@ class Sale:
                              also passes a `True` if such an argument is proved
                              or a `False`
         """
-        NereidUser = Pool().get('nereid.user')
+        pool = Pool()
+        NereidUser = pool.get('nereid.user')
+        Cart = pool.get('nereid.cart')
+        Checkout = pool.get('nereid.checkout')
 
         # This Ugly type hack is for a bug in previous versions where some
         # parts of the code passed confirmation as a text
         confirmation = False if confirmation is None else True
+
+        # Clear the cart if requested. This can be the case when being called
+        # e.g from the stripe form, that is not submitted, but redirected.
+        if clear_cart:
+            cart = Cart.open_cart()
+            Checkout.confirm_cart(cart, do_redirect=False)
+
 
         # Try to find if the user can be shown the order
         access_code = request.values.get('access_code', None)
@@ -168,33 +179,29 @@ class Sale:
             payment_profile or credit_card_form
         ):
             gateway = current_website.credit_card_gateway
+            # Only one payment per gateway
+            payment = self._get_payment_for_gateway(gateway)
+            if payment:
+                payment.amount = self._get_amount_to_checkout()
+                payment.save()
+                return
 
-            if payment_profile:
-                self.validate_payment_profile(payment_profile)
-
-                payment_wizard.payment_info.use_existing_card = True
-                payment_wizard.payment_info.payment_profile = payment_profile.id
-
-            elif credit_card_form:
-
-                # TODO: Do not allow saving payment profile for guest user.
-                # This can introduce an issue when guest user
-                # checkouts multiple times with the same card
-
-                payment_wizard.payment_info.use_existing_card = False
-                payment_wizard.payment_info.payment_profile = None
-                payment_wizard.payment_info.address = self.invoice_address
-                payment_wizard.payment_info.owner = credit_card_form.owner.data
-                payment_wizard.payment_info.number = \
-                    credit_card_form.number.data
-                payment_wizard.payment_info.expiry_month = \
-                    credit_card_form.expiry_month.data
-                payment_wizard.payment_info.expiry_year = \
-                    unicode(credit_card_form.expiry_year.data)
-                payment_wizard.payment_info.csc = credit_card_form.cvv.data
+            payment_wizard.payment_info.payment_profile = None
+            payment_wizard.payment_info.address = self.invoice_address
 
         elif alternate_payment_method:
             gateway = alternate_payment_method.gateway
+            # Only one payment per gateway
+            payment = self._get_payment_for_gateway(gateway)
+            if payment:
+                payment.amount = self._get_amount_to_checkout()
+                if Transaction().context.get('gift_card'):
+                    gift_card = GiftCard(Transaction().context['gift_card'])
+                    amount_to_pay = min(gift_card.amount_available,
+                            self._get_amount_to_checkout())
+                    payment.amount = amount_to_pay
+                payment.save()
+                return
             payment_wizard.payment_info.use_existing_card = False
             payment_wizard.payment_info.payment_profile = None
 
@@ -261,6 +268,18 @@ class Sale:
 
             flash(_('Comment Added'))
         return redirect(request.referrer)
+
+    def _get_payment_for_gateway(self, gateway):
+        '''
+        Returns the first and hopefully single payment for a specific
+        gateway.
+        '''
+        payment = None
+        for s_payment in self.payments:
+            if s_payment.gateway.id == gateway.id:
+                payment = s_payment
+                break
+        return payment
 
     def _get_amount_to_checkout(self):
         """
