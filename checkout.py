@@ -692,7 +692,6 @@ class Checkout(ModelView):
         NereidCart = pool.get('nereid.cart')
         PaymentMethod = pool.get('nereid.website.payment_method')
         PaymentProfile = pool.get('party.payment_profile')
-        PaymentTransaction = pool.get('payment_gateway.transaction')
 
         cart = NereidCart.open_cart()
         sale = cart.sale
@@ -741,19 +740,8 @@ class Checkout(ModelView):
             if payment.amount == Decimal('0'):
                 payment.amount = sale._get_amount_to_checkout()
                 payment.save()
-
-            payment_transaction = PaymentTransaction(
-                party=sale.party,
-                address=sale.invoice_address,
-                amount=payment.amount,
-                currency=sale.currency,
-                gateway=gateway,
-                sale=sale,
-                sale_payment=payment,
-                description='Stripe Cart Payment',
-                origin=sale,
-                )
-            payment_transaction.on_change_party()
+            payment_transaction = payment._create_payment_transaction(
+                payment.amount, 'Payment by Card')
             payment_transaction.save()
             payment_transaction.create_payment_intent_stripe()
             client_secret = payment_transaction.provider_token
@@ -834,7 +822,6 @@ class Checkout(ModelView):
         NereidCart = pool.get('nereid.cart')
         PaymentMethod = pool.get('nereid.website.payment_method')
         Date = pool.get('ir.date')
-        PaymentTransaction = pool.get('payment_gateway.transaction')
 
         cart = NereidCart.open_cart()
         sale = cart.sale
@@ -873,19 +860,8 @@ class Checkout(ModelView):
                 if payment.amount == Decimal('0'):
                     payment.amount = sale._get_amount_to_checkout()
                     payment.save()
-
-                payment_transaction = PaymentTransaction(
-                    party=sale.party,
-                    address=sale.invoice_address,
-                    amount=payment.amount,
-                    currency=sale.currency,
-                    gateway=gateway,
-                    sale=sale,
-                    sale_payment=payment,
-                    description='Stripe Cart Payment',
-                    origin=sale,
-                    )
-                payment_transaction.on_change_party()
+                payment_transaction = payment._create_payment_transaction(
+                    payment.amount, 'Payment by Card')
                 payment_transaction.save()
                 payment_transaction.create_payment_intent_stripe()
                 client_secret = payment_transaction.provider_token
