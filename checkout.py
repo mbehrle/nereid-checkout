@@ -745,28 +745,31 @@ class Checkout(ModelView):
             payment_transaction.save()
             payment_transaction.create_payment_intent_stripe()
             client_secret = payment_transaction.provider_token
-            return render_template(
-                'checkout/checkout_stripe.jinja',
-                sale=sale,
-                credit_card_form=credit_card_form,
-                payment_gateway=gateway,
-                client_secret=client_secret,
-                PaymentMethod=PaymentMethod,
-            )
+            sale.save()
+            return redirect(url_for('nereid.checkout.stripe_checkout',
+                    sale_id=sale.id, client_secret=client_secret))
 
 
     @classmethod
-    @route('/checkout/checkout_stripe', methods=['GET'])
+    @route('/checkout/checkout_stripe/<sale_id>/<client_secret>',
+        methods=['GET'])
     @not_empty_cart
     @sale_has_non_guest_party
     @with_company_context
-    def stripe_checkout(cls):
+    def stripe_checkout(cls, sale_id=None, client_secret=None):
+        pool = Pool()
+        Sale = pool.get('sale.sale')
+
+        if not sale_id or not client_secret:
+            return
+        sale = Sale(sale_id)
         payment_gateway = current_website.credit_card_gateway
         return render_template(
             'checkout/checkout_stripe.jinja',
-            sale=cart.sale,
+            sale=sale,
             payment_gateway=payment_gateway,
-        )
+            client_secret=client_secret,
+            )
 
     @classmethod
     @route('/checkout/stripecancel/<sale_id>', methods=['GET'], readonly=False)
