@@ -689,7 +689,6 @@ class Checkout(ModelView):
         behavior of processing payment independent of this module.
         """
         pool = Pool()
-        NereidCart = pool.get('nereid.cart')
         PaymentMethod = pool.get('nereid.website.payment_method')
         PaymentProfile = pool.get('party.payment_profile')
 
