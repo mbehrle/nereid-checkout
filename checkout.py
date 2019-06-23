@@ -799,7 +799,6 @@ class Checkout(ModelView):
         Sale = pool.get('sale.sale')
         PaymentGateway = pool.get('payment_gateway.gateway')
         GatewayTransaction = pool.get('payment_gateway.transaction')
-        SalePayment = pool.get('sale.payment')
 
         if sale_id:
             sale = Sale(sale_id)
