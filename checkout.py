@@ -845,35 +845,6 @@ class Checkout(ModelView):
                 # with this
                 return redirect(url_for('nereid.checkout.billing_address'))
 
-            if (current_website.credit_card_gateway
-                    and credit_card_form.validate()
-                    and not payment_form.alternate_payment_method.data):
-                # validate the credit card form and checkout using that
-                # Only one payment per gateway
-                gateway = current_website.credit_card_gateway
-                payment = sale._get_payment_for_gateway(gateway)
-                if payment is None:
-                    sale._add_sale_payment(credit_card_form=credit_card_form)
-                    payment = sale._get_payment_for_gateway(gateway)
-                # Update the paymount_amount with the actual needed sum, when
-                # it was set to 0 by a cancelation.
-                if payment.amount == Decimal('0'):
-                    payment.amount = sale._get_amount_to_checkout()
-                    payment.save()
-                payment_transaction = payment._create_payment_transaction(
-                    payment.amount, 'Payment by Card')
-                payment_transaction.save()
-                payment_transaction.create_payment_intent_stripe()
-                client_secret = payment_transaction.provider_token
-                return render_template(
-                    'checkout/checkout_stripe.jinja',
-                    sale=sale,
-                    credit_card_form=credit_card_form,
-                    payment_gateway=gateway,
-                    client_secret=client_secret,
-                    PaymentMethod=PaymentMethod,
-                )
-
             rv = cls._process_payment(cart)
             if isinstance(rv, BaseResponse):
                 # Return if BaseResponse
