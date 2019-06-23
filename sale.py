@@ -275,8 +275,12 @@ class Sale:
         gateway.
         '''
         payment = None
+        gift_card_id = Transaction().context.get('gift_card')
         for s_payment in self.payments:
             if s_payment.gateway.id == gateway.id:
+                if gift_card_id:
+                    if gift_card_id != s_payment.gift_card.id:
+                        continue
                 payment = s_payment
                 break
         return payment
