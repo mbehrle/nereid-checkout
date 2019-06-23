@@ -693,7 +693,7 @@ class Checkout(ModelView):
         PaymentMethod = pool.get('nereid.website.payment_method')
         PaymentProfile = pool.get('party.payment_profile')
 
-        cart = NereidCart.open_cart()
+        cls._sanitize_payments(cart)
         sale = cart.sale
         payment_form = cls.get_payment_form()
         credit_card_form = cls.get_credit_card_form()
@@ -749,6 +749,24 @@ class Checkout(ModelView):
             return redirect(url_for('nereid.checkout.stripe_checkout',
                     sale_id=sale.id, client_secret=client_secret))
 
+    @classmethod
+    def _sanitize_payments(cls, cart):
+        '''
+        Clean up any payments left over from unsuccessful attempts.
+
+        Since it is possible to return to payment_methods without using the
+        proper cancel buttons it may be necessary to clean up the payment
+        environment.
+        '''
+        sale = cart.sale
+        for payment in sale.payments:
+            if payment.amount != payment.amount_consumed:
+                payment.amount = payment.amount_consumed
+                payment.save()
+        sale.payment_processing_state = None
+        # Reset to the original channel settings
+        sale.on_change_channel()
+        sale.save()
 
     @classmethod
     @route('/checkout/checkout_stripe/<sale_id>/<client_secret>',
@@ -805,11 +823,11 @@ class Checkout(ModelView):
                     transaction.save()
             flash(_('Credit Card payment canceled'), 'info')
         else:
-            flash(_('Error in payment processing'), 'warning')
+            flash(_('Error in processing payment.'), 'warning')
         return redirect(url_for('nereid.checkout.payment_method'))
 
     @classmethod
-    @route('/checkout/payment', methods=['GET', 'POST'])
+    @route('/checkout/payment', methods=['GET', 'POST'], readonly=False)
     @not_empty_cart
     @sale_has_non_guest_party
     @with_company_context
@@ -827,6 +845,7 @@ class Checkout(ModelView):
         Date = pool.get('ir.date')
 
         cart = NereidCart.open_cart()
+        cls._sanitize_payments(cart)
         sale = cart.sale
         if not sale.shipment_address:
             return redirect(url_for('nereid.checkout.shipping_address'))
