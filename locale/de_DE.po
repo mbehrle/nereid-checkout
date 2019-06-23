@@ -78,17 +78,9 @@ msgctxt "field:party.address,phone:"
 msgid "Phone"
 msgstr "Telefon"
 
-msgctxt "field:party.address,phone_number:"
-msgid "Phone"
-msgstr "Telefon"
-
 msgctxt "field:party.party,nereid_session:"
 msgid "Nereid Session"
 msgstr "Nereid Sitzung"
-
-msgctxt "field:sale.sale,email_sent:"
-msgid "Email Sent?"
-msgstr "E-Mail gesendet"
 
 msgctxt "field:sale.sale,guest_access_code:"
 msgid "Guest Access Code"
@@ -110,279 +102,151 @@ msgctxt "model:res.group,name:"
 msgid "Order Confirmation BCC receivers"
 msgstr "Bestellbestätigung BCC-Empfänger"
 
-msgctxt "nereid:checkout.py:131"
+msgctxt "nereid:checkout.py:136"
 msgid "Full Name on Card"
 msgstr "Name (wie auf der Karte)"
 
-msgctxt "nereid:checkout.py:133"
+msgctxt "nereid:checkout.py:138"
 msgid "Card Number"
 msgstr "Kartennummer"
 
-msgctxt "nereid:checkout.py:133"
-msgid "Full Name on Card"
-msgstr "Name (wie auf der Karte)"
-
-msgctxt "nereid:checkout.py:135"
-msgid "Card Number"
-msgstr "Kartennummer"
-
-msgctxt "nereid:checkout.py:137"
-msgid "Card Expiry Month"
-msgstr "Gültigkeitsmonat"
-
-msgctxt "nereid:checkout.py:139"
+msgctxt "nereid:checkout.py:142"
 msgid "Card Expiry Month"
 msgstr "Karte Gültigkeitsmonat"
 
-msgctxt "nereid:checkout.py:140"
+msgctxt "nereid:checkout.py:145"
 msgid "01-January"
 msgstr "01-Januar"
 
-msgctxt "nereid:checkout.py:141"
+msgctxt "nereid:checkout.py:146"
 msgid "02-February"
 msgstr "02-Februar"
 
-msgctxt "nereid:checkout.py:142"
-msgid "01-January"
-msgstr "01-Januar"
-
-msgctxt "nereid:checkout.py:142"
+msgctxt "nereid:checkout.py:147"
 msgid "03-March"
 msgstr "03-März"
 
-msgctxt "nereid:checkout.py:143"
-msgid "02-February"
-msgstr "02-Februar"
-
-msgctxt "nereid:checkout.py:143"
+msgctxt "nereid:checkout.py:148"
 msgid "04-April"
 msgstr "04-April"
 
-msgctxt "nereid:checkout.py:144"
-msgid "03-March"
-msgstr "03-März"
-
-msgctxt "nereid:checkout.py:144"
+msgctxt "nereid:checkout.py:149"
 msgid "05-May"
 msgstr "05-Mai"
 
-msgctxt "nereid:checkout.py:145"
-msgid "04-April"
-msgstr "04-April"
-
-msgctxt "nereid:checkout.py:145"
+msgctxt "nereid:checkout.py:150"
 msgid "06-June"
 msgstr "06-Juni"
 
-msgctxt "nereid:checkout.py:146"
-msgid "05-May"
-msgstr "05-Mai"
-
-msgctxt "nereid:checkout.py:146"
+msgctxt "nereid:checkout.py:151"
 msgid "07-July"
 msgstr "07-Juli"
-
-msgctxt "nereid:checkout.py:147"
-msgid "06-June"
-msgstr "06-Juni"
-
-msgctxt "nereid:checkout.py:147"
-msgid "08-August"
-msgstr "08-August"
-
-msgctxt "nereid:checkout.py:148"
-msgid "07-July"
-msgstr "07-Juli"
-
-msgctxt "nereid:checkout.py:148"
-msgid "09-September"
-msgstr "09-September"
-
-msgctxt "nereid:checkout.py:149"
-msgid "08-August"
-msgstr "08-August"
-
-msgctxt "nereid:checkout.py:149"
-msgid "10-October"
-msgstr "10-Oktober"
-
-msgctxt "nereid:checkout.py:150"
-msgid "09-September"
-msgstr "09-September"
-
-msgctxt "nereid:checkout.py:150"
-msgid "11-November"
-msgstr "11-November"
-
-msgctxt "nereid:checkout.py:151"
-msgid "10-October"
-msgstr "10-Oktober"
-
-msgctxt "nereid:checkout.py:151"
-msgid "12-December"
-msgstr "12-Dezember"
 
 msgctxt "nereid:checkout.py:152"
+msgid "08-August"
+msgstr "08-August"
+
+msgctxt "nereid:checkout.py:153"
+msgid "09-September"
+msgstr "09-September"
+
+msgctxt "nereid:checkout.py:154"
+msgid "10-October"
+msgstr "10-Oktober"
+
+msgctxt "nereid:checkout.py:155"
 msgid "11-November"
 msgstr "11-November"
 
-msgctxt "nereid:checkout.py:153"
+msgctxt "nereid:checkout.py:156"
 msgid "12-December"
 msgstr "12-Dezember"
 
-msgctxt "nereid:checkout.py:158"
-msgid "Card Expiry Year"
-msgstr "Gültigkeitsjahr"
-
-msgctxt "nereid:checkout.py:160"
+msgctxt "nereid:checkout.py:163"
 msgid "Card Expiry Year"
 msgstr "Karte Gültigkeitsjahr"
 
-msgctxt "nereid:checkout.py:163"
+msgctxt "nereid:checkout.py:168"
 msgid "CVD/CVV Number"
 msgstr "CVD/CVV Nummer"
-
-msgctxt "nereid:checkout.py:165"
-msgid "CVD/CVV Number"
-msgstr "CVD/CVV Nummer"
-
-msgctxt "nereid:checkout.py:180"
-msgid "Use shipping address as billing address"
-msgstr "Lieferadresse als Rechnungsdresse verwenden"
-
-msgctxt "nereid:checkout.py:182"
-msgid "Use shipping address as billing address"
-msgstr "Lieferadresse als Rechnungsdresse verwenden"
-
-msgctxt "nereid:checkout.py:183"
-msgid "Choose a card"
-msgstr "Wählen Sie eine Karte"
 
 msgctxt "nereid:checkout.py:185"
+msgid "Use shipping address as billing address"
+msgstr "Lieferadresse als Rechnungsdresse verwenden"
+
+msgctxt "nereid:checkout.py:188"
 msgid "Choose a card"
 msgstr "Wählen Sie eine Karte"
 
-msgctxt "nereid:checkout.py:188"
+msgctxt "nereid:checkout.py:193"
 msgid "Alternate payment methods"
 msgstr "Alternative Zahlungsmethoden"
-
-msgctxt "nereid:checkout.py:190"
-msgid "Alternate payment methods"
-msgstr "Alternative Zahlungsmethoden"
-
-msgctxt "nereid:checkout.py:197"
-msgid "e-mail"
-msgstr "E-Mail"
-
-msgctxt "nereid:checkout.py:198"
-msgid "Password"
-msgstr "Passwort"
-
-msgctxt "nereid:checkout.py:199"
-msgid "e-mail"
-msgstr "E-Mail"
-
-msgctxt "nereid:checkout.py:200"
-msgid "Password"
-msgstr "Passwort"
-
-msgctxt "nereid:checkout.py:201"
-msgid "Checkout as a guest"
-msgstr "Als Gast bestellen"
 
 msgctxt "nereid:checkout.py:202"
-msgid "Use my account"
-msgstr "Mein Benutzerkonto verwenden"
+msgid "e-mail"
+msgstr "E-Mail"
 
 msgctxt "nereid:checkout.py:203"
+msgid "Password"
+msgstr "Passwort"
+
+msgctxt "nereid:checkout.py:206"
 msgid "Checkout as a guest"
 msgstr "Als Gast bestellen"
 
-msgctxt "nereid:checkout.py:204"
-msgid "Use my account"
-msgstr "Mein Benutzerkonto verwenden"
-
-msgctxt "nereid:checkout.py:205"
-msgid "Remember Me"
-msgstr "Angemeldet bleiben"
-
 msgctxt "nereid:checkout.py:207"
+msgid "Use my account"
+msgstr "Mein Konto verwenden"
+
+msgctxt "nereid:checkout.py:210"
 msgid "Remember Me"
 msgstr "Angemeldet bleiben"
 
-msgctxt "nereid:checkout.py:209"
+msgctxt "nereid:checkout.py:214"
 msgid "Password is required."
-msgstr "Passwort ist erforderlich."
+msgstr "Passwort ist erforderlich"
 
-msgctxt "nereid:checkout.py:211"
-msgid "Password is required."
-msgstr "Passwort ist erforderlich."
-
-msgctxt "nereid:checkout.py:290"
+msgctxt "nereid:checkout.py:295"
 msgid "Guest with email: %(email)s"
 msgstr "Gast mit E-Mail: %(email)s"
 
-msgctxt "nereid:checkout.py:292"
-msgid "Guest with email: %(email)s"
-msgstr "Gast mit E-Mail: %(email)s"
-
-msgctxt "nereid:checkout.py:341"
+msgctxt "nereid:checkout.py:346"
 msgid "Either username or password is incorrect"
 msgstr "Entweder der Anmeldename oder das Passwort ist falsch"
 
-msgctxt "nereid:checkout.py:343"
-msgid "Either username or password is incorrect"
-msgstr "Entweder der Anmeldename oder das Passwort ist falsch"
-
-msgctxt "nereid:checkout.py:425"
+msgctxt "nereid:checkout.py:430"
 msgid "The address chosen is not valid"
-msgstr "Die ausgewählte Adresse ist nicht gültig"
+msgstr "Die gewählte Adresse ist ungültig"
 
-msgctxt "nereid:checkout.py:427"
+msgctxt "nereid:checkout.py:584"
 msgid "The address chosen is not valid"
-msgstr "Die ausgewählte Adresse ist ungültig."
+msgstr "Die gewählte Adresse ist ungültig"
 
-msgctxt "nereid:checkout.py:578"
-msgid "The address chosen is not valid"
-msgstr "Die ausgewählte Adresse ist ungültig."
+msgctxt "nereid:checkout.py:823"
+msgid "Credit Card payment canceled"
+msgstr "Kreditkartenzahlung abgebrochen"
 
-msgctxt "nereid:checkout.py:580"
-msgid "The address chosen is not valid"
-msgstr "Die ausgewählte Adresse ist ungültig."
-
-msgctxt "nereid:checkout.py:773"
+msgctxt "nereid:checkout.py:825"
 msgid "Error in processing payment."
-msgstr "Fehler bei der Durchführung der Zahlung."
+msgstr "Fehler bei der Bezahlungsabwicklung"
 
-msgctxt "nereid:checkout.py:775"
+msgctxt "nereid:checkout.py:875"
 msgid "Error in processing payment."
-msgstr "Fehler bei der Durchführung der Zahlung."
+msgstr "Fehler bei der Bezahlungsabwicklung"
 
-msgctxt "nereid:checkout.py:797"
+msgctxt "nereid:checkout.py:913"
 msgid "Your order has been processed"
 msgstr "Ihre Bestellung wurde ausgeführt."
 
-msgctxt "nereid:checkout.py:799"
-msgid "Your order has been processed"
-msgstr "Ihre Bestellung wurde ausgeführt."
-
-msgctxt "nereid:sale.py:142"
+msgctxt "nereid:sale.py:153"
 msgid "The payment profile chosen is invalid"
-msgstr "Das ausgewählte Zahlungsprofil ist ungültig."
+msgstr "Das gewählte Zahlungsprofil ist ungültig"
 
-msgctxt "nereid:sale.py:258"
+msgctxt "nereid:sale.py:265"
 msgid "Comment Added"
 msgstr "Kommentar hinzugefügt"
 
-msgctxt "nereid:sale.py:259"
-msgid "Comment Added"
-msgstr "Kommentar hinzugefügt"
-
-msgctxt "nereid:sale.py:262"
-msgid "Comment Added"
-msgstr "Kommentar hinzugefügt"
-
-msgctxt "nereid:sale.py:263"
+msgctxt "nereid:sale.py:269"
 msgid "Comment Added"
 msgstr "Kommentar hinzugefügt"
 
