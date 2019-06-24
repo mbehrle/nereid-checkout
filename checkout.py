@@ -762,6 +762,13 @@ class Checkout(ModelView):
             if payment.amount != payment.amount_consumed:
                 payment.amount = payment.amount_consumed
                 payment.save()
+            if payment.amount == Decimal('0'):
+                for transaction in [
+                        t for t in payment.payment_transactions if
+                        t.state in ['draft', 'in-progress']
+                        ]:
+                            transaction.state = 'cancel'
+                            transaction.save()
         sale.payment_processing_state = None
         # Reset to the original channel settings
         sale.on_change_channel()
