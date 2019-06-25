@@ -413,11 +413,10 @@ class Sale:
         cls.set_number(sales)
         cls.quote(sales)
         for sale in sales:
-            sale.process_pending_transactions()
+            sale.process_pending_payments()
             # gift cards
             sale.settle_manual_payments()
             sale.handle_payment_on_confirm()
-            sale.process_pending_payments()
 
 
 class SaleLine:
