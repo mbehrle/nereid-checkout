@@ -770,6 +770,7 @@ class Checkout(ModelView):
                             transaction.state = 'cancel'
                             transaction.save()
         sale.payment_processing_state = None
+        sale.sale_date = None
         # Reset to the original channel settings
         sale.on_change_channel()
         sale.save()
